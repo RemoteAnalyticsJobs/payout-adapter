@@ -9,6 +9,10 @@
             "email": "shaikhsharik709@gmail.com"
         }
     ],
+    "psr-4": {
+        "PayoutAdapter\\" : "./src",
+        "PayoutAdapter\\Test\\" : "./tests/"
+    },
     "minimum-stability": "dev",
     "require": {}
 }
