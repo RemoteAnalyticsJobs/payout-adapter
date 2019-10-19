@@ -1,0 +1,14 @@
+{
+    "name": "sharik709/laravel-payout-adapter",
+    "description": "It will help manage multiple payout gateways",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Sharik Shaikh",
+            "email": "shaikhsharik709@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
