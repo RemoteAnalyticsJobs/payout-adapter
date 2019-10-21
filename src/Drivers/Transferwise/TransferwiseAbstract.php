@@ -3,6 +3,7 @@ namespace PayoutAdapter\Drivers\Transferwise;
 
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
 
 abstract class TransferwiseAbstract {
     /** @var mixed */
@@ -11,8 +12,10 @@ abstract class TransferwiseAbstract {
     /** @var Object */
     public $user;
 
+    /** @var string  */
     const SANDBOX_URI   = 'https://api.sandbox.transferwise.tech/v1/';
 
+    /** @var string  */
     const LIVE_URI      = 'https://api.sandbox.transferwise.tech/v1/';
 
     /**
@@ -38,7 +41,10 @@ abstract class TransferwiseAbstract {
      */
     public function getProfileId()
     {
-        return config('payout_adapter.transferwise.profile_id');
+        if (app()->environment() == 'testing' || app()->environment() == 'local') {
+            return config('payout_adapter.transferwise.SANDBOX_PROFILE_ID');
+        }
+        return config('payout_adapter.transferwise.LIVE_PROFILE_ID');
     }
 
     /**
@@ -46,7 +52,10 @@ abstract class TransferwiseAbstract {
      */
     private function getAPIToken()
     {
-        return config('payout_adapter.transferwise.api_token');
+        if (app()->environment() == 'testing' || app()->environment() == 'local') {
+            return config('payout_adapter.transferwise.SANDBOX_TOKEN');
+        }
+        return config('payout_adapter.transferwise.LIVE_TOKEN');
     }
 
     /**
@@ -92,7 +101,9 @@ abstract class TransferwiseAbstract {
         try {
             return json_decode($this->httpClient->post($uri, [
                 'json' => $data
-            ])->getBody(), true);
+            ])->getBody()->getContents(), true);
+        } catch (RequestException $e) {
+            return json_decode($e->getResponse()->getBody()->getContents(), true);
         } catch (\Exception $ex) {
             return $ex->getMessage();
         }

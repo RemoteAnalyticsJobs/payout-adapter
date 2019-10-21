@@ -3,6 +3,8 @@
 namespace PayoutAdapter\Drivers\TransPay;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
+use PayoutAdapter\Contracts\DriverContract;
 
 abstract class TransPayAbstract
 {
@@ -18,15 +20,19 @@ abstract class TransPayAbstract
     /** @var string  */
     public static $SANDBOX_URL = 'https://demo-api.transfast.net/';
 
+    /** @var User */
+    public $user;
+
     /**
      * TransPayAbstract constructor.
      * @param null $client
      */
-    public function __construct($client = null)
+    public function __construct($user, $client = null)
     {
         $apiToken = $this->_getApiKey();
         $this->_setApiKey($apiToken);
         $this->_setHttpClient($client);
+        $this->user = $user;
     }
 
     /**
@@ -64,7 +70,7 @@ abstract class TransPayAbstract
      */
     public static function _getBaseUrl()
     {
-        if (app()->environment() == 'testing') {
+        if (app()->environment() == 'testing' || app()->environment() == 'local') {
             return self::$SANDBOX_URL;
         }
 
@@ -78,8 +84,35 @@ abstract class TransPayAbstract
     public function _getApiKey()
     {
         if (app()->environment() == 'testing' || app()->environment() == 'local') {
-            return config('transpay.SANDBOX_TOKEN');
+            return config('payout_adapter.transpay.SANDBOX_TOKEN');
         }
-        return config('transpay.LIVE_TOKEN');
+        return config('payout_adapter.transpay.LIVE_TOKEN');
+    }
+
+    /**
+     * @param string $uri
+     * @param array $data
+     * @return \Psr\Http\Message\ResponseInterface
+     */
+    public function post(string $uri, array $data = [])
+    {
+        try {
+            return $this->_httpClient->post($uri, ['json' => $data])->getBody()->getContents();
+        } catch (RequestException $e) {
+            return $e->getResponse()->getBody()->getContents();
+        }
+    }
+
+    /**
+     * @param string $uri
+     * @return \Psr\Http\Message\ResponseInterface
+     */
+    public function get(string $uri)
+    {
+        try {
+            return $this->_httpClient->get($uri);
+        } catch (RequestException $e) {
+            return json_decode($e->getResponse()->getBody()->getContents(), true);
+        }
     }
 }

@@ -416,4 +416,8 @@ class CurrencyBankInfo {
     public static function isSupported(string $currency) : bool  {
         return isset(self::$requiredInfo[$currency]);
     }
+
+    public static function getCountry(string $currency) : string {
+        if(!isset(self::$requiredInfo[$currency]))
+    }
 };

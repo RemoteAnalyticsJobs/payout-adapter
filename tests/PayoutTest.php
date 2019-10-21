@@ -1,5 +1,8 @@
 <?php namespace PayoutAdapter\Test;
 
+use PayoutAdapter\Contracts\DriverContract;
+use PayoutAdapter\Drivers\Transferwise\Transferwise;
+use PayoutAdapter\Drivers\TransPay\TransPay;
 use PayoutAdapter\Payout;
 use Tests\TestCase;
 
@@ -12,8 +15,19 @@ class PayoutTest extends TestCase
         $this->assertInstanceOf(Payout::Class, new Payout('some driver'));
     }
 
-    public function it_tests_if_payout_can_work_with_Driver()
+    public function test_if_it_returns_driver()
     {
+        $driver = Payout::driver();
+        $this->assertInstanceOf(DriverContract::class, $driver);
     }
 
+    public function test_if_when_said_transferwise_it_returns_transferwise_driver()
+    {
+        $this->assertInstanceOf(Transferwise::class, Payout::driver('transferwise'));
+    }
+
+    public function test_if_when_said_transpay_it_returns_transpay_driver()
+    {
+        $this->assertInstanceOf(TransPay::class, Payout::driver('transpay'));
+    }
 }

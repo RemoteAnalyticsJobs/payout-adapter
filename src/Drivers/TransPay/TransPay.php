@@ -2,13 +2,23 @@
 
 namespace PayoutAdapter\Drivers\TransPay;
 
-class TransPay extends TransPayAbstract
+use PayoutAdapter\Contracts\DriverContract;
+use PayoutAdapter\CurrencyBankInfo;
+
+class TransPay extends TransPayAbstract implements DriverContract
 {
+
     /**
-     * @return Transaction
+     * @param $sourceCurrency
+     * @param $amount
+     * @param $recipientCurrency
+     * @return mixed
      */
-    public function transaction()
+    public function getQuote(string $sourceCurrency, int $amount, string $recipientCountry)
     {
-        return new Transaction();
+        $currency = CurrencyBankInfo::getCurrencyByCountry($recipientCurrency);
+        $uri = '/api/rates/countryrates?sourcecurrencyisocode='.$sourceCurrency.'&ReceiveCountryIsoCode='.$country;
+        $exchangeRates = $this->get($uri);
+        dd($exchangeRates);
     }
 }
