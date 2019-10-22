@@ -12,5 +12,9 @@ class PayoutAdapterServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__.'/Config/PayoutAdapter.php', 'payout_adapter');
     }
 
+    public function boot()
+    {
+        
+    }
 
 }
