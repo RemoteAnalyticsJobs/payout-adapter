@@ -1,7 +1,6 @@
 <?php
 namespace PayoutAdapter\Test\Drivers\Transferwise;
 
-
 use App\User;
 use GuzzleHttp\Client;
 use PayoutAdapter\Drivers\Transferwise\TransferwiseAbstract;
@@ -44,5 +43,4 @@ class TransferWiseAbstractTest extends TestCase
     {
         $this->assertContains('sandbox', $this->instance->getBaseUri());
     }
-
 }

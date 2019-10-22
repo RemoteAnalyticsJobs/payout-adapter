@@ -30,4 +30,13 @@ class PayoutTest extends TestCase
     {
         $this->assertInstanceOf(TransPay::class, Payout::driver('transpay'));
     }
+
+    public function test_get_quote() {
+        $sourceCurrency = 'USD';
+        $amount = 100;
+        $recipientCountry = 'india';
+
+        $quote = Payout::driver()->getQuote($sourceCurrency, $amount, $recipientCountry);
+        dd($quote);
+    }
 }

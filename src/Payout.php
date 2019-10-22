@@ -49,6 +49,6 @@ class Payout implements PayoutContract
      */
     public function getDefaultPayoutDriverName() : string
     {
-        return env('PAYOUT_DRIVER');
+        return config('payout_adapter.default');
     }
 }

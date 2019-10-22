@@ -110,7 +110,7 @@ abstract class TransPayAbstract
     public function get(string $uri)
     {
         try {
-            return $this->_httpClient->get($uri);
+            return json_decode($this->_httpClient->get($uri)->getBody()->getContents(), true);
         } catch (RequestException $e) {
             return json_decode($e->getResponse()->getBody()->getContents(), true);
         }
