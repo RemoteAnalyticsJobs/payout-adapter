@@ -19,9 +19,13 @@ class TransPay extends TransPayAbstract implements DriverContract
     {
         $quote = [];
         $countryISO = CurrencyBankInfo::getCountryISO($recipientCountry);
+        $currency = CurrencyBankInfo::getCountryCurrency($recipientCountry);
         $uri = '/api/rates/countryrates?sourcecurrencyisocode='.$sourceCurrency.'&ReceiveCountryIsoCode='.$countryISO;
         $exchangeRates = $this->normalizeExchangeRates($this->get($uri));
         $quote['rate'] = $exchangeRates;
+        $quote['targetCurrency'] = $currency;
+        $quote['targetAmount'] = $amount;
+
         return $quote;
     }
 
