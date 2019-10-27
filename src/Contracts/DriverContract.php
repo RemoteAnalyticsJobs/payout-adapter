@@ -10,5 +10,11 @@ interface DriverContract {
      */
     public function getQuote(string $sourceCurrency, int $amount, string $recipientCountry);
 
+    /**
+     * @param string $country
+     * @param array $data
+     * @return mixed
+     */
+    public function createRecipient(string $country, array $data);
 
 }
