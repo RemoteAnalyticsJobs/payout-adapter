@@ -13,9 +13,11 @@ class CreatePayoutAdapterBankAccountTable extends Migration
      */
     public function up()
     {
-        Schema::create('payout_adapter_bank_account', function (Blueprint $table) {
+        Schema::create('payout_adapter_bank_accounts', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->timestamps();
+            $table->bigInteger('profile_id');
+            $table->unsignedBigInteger('user_id');
         });
     }
 
@@ -26,6 +28,6 @@ class CreatePayoutAdapterBankAccountTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('payout_adapter_bank_account');
+        Schema::dropIfExists('payout_adapter_bank_accounts');
     }
 }
