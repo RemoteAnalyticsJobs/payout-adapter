@@ -1,15 +1,22 @@
 <?php
 namespace PayoutAdapter\Test\Drivers\Transferwise;
 
-use App\User;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\DB;
 use PayoutAdapter\Drivers\Transferwise\Transferwise;
-use PayoutAdapter\Utils\CurrencyBankInfo;
 use Tests\TestCase;
 
 class TransferWiseTest extends TestCase
 {
-    use WithFaker;
+    use WithFaker, DatabaseMigrations;
+
+    protected function setUp() : void
+    {
+        parent::setUp();
+        $this->artisan('migrate:fresh');
+    }
+
     public function test_if_quote_for_an_amount_can_be_received()
     {
         $driver = new Transferwise;
@@ -30,47 +37,70 @@ class TransferWiseTest extends TestCase
         $data = [
             'type' => 'indian',
             'accountHolderName' => 'Sharik Shaiikh',
-            'details' => $values
+            'bankDetails' => $values
         ];
 
         $recipient = $driver->createRecipient($country, $data);
-
-        dd($recipient);
+        $this->assertNotNull($recipient['id']);
     }
 
+    public function test_if_transaction_gets_created() {
+        $user_id = 1;
+        $quote = $this->getQuote('USD', 100, 'india');
+        $values = [
+            'ifscCode' => 'KKBK0000628',
+            'accountNumber' => '1234567890',
+            'legalType' => 'PRIVATE'
+        ];
+        $data = [
+            'quote_id' => $quote['id'],
+            'user_id' => $user_id,
+            'customerTransactionId' => $this->faker->uuid,
+            'reference' => 'ABCD job',
+            'phone' => '1234668',
+            'legalType' => 'PRIVATE',
+            'currency' => 'INR',
+            'sourceCurrency' => 'USD',
+            'countryIsoCode' => 'IN',
+            'type' => 'indian',
+            'accountHolderName' => 'Sharik Shaiikh',
+            'country' => 'india',
+            'amount' => 100,
+            'bankDetails' => $values
+        ];
+        $response = (new Transferwise())->createTransaction(100, $data);
+        $this->assertNotNull($response['id']);
+    }
 
+    public function test_If_userProfileExists_returns_false_When_there_is_no_a_profile()
+    {
+        $driver = new Transferwise();
+        $this->assertFalse($driver->userProfileExists(1));
+    }
 
+    public function test_if_userProfileExists_returns_true_when_there_is_a_profile()
+    {
+        $driver = new Transferwise();
+        DB::table('payout_adapter_bank_accounts')->insert(['user_id' => 1, 'profile_id' => 1 ]);
+        $this->assertTrue($driver->userProfileExists(1));
+    }
 
+    public function test_if_getRecipientProfileId_is_returning_information_when_available()
+    {
+        $user_id = 1;
+        $driver = new Transferwise();
+        DB::table('payout_adapter_bank_accounts')->insert(['user_id' => $user_id, 'profile_id' => 123 ]);
+        $this->assertEquals(123, $driver->getRecipientProfileId($user_id));
+    }
 
+    public function test_if_getRecipientProfileId_is_returning_null_because_recipient_profile_id_doesnt_exists()
+    {
+        $user_id = 1;
+        $driver = new Transferwise();
+        $this->assertNull($driver->getRecipientProfileId($user_id));
+    }
 
-
-    /**
-     *
-     *
-     *
-     *
-     *
-     * RAJ -> send -> $100 -> from -> michael -> to -> jackson
-     * central banking [------------------------] -> what is the default driver for raj ? driver ->  normalize
-     * transferwise [first name | last name] | transpay [fullName]
-     *
-     *
-     *
-     *
-     *
-     *
-     *
-     *
-     *
-     *
-     *
-     *
-     */
-
-
-
-
-
-
-
+    public function getQuote($source, $amount, $targetCountry) {
+        return (new Transferwise())->getQuote($source, $amount, $targetCountry);
+    }
 }

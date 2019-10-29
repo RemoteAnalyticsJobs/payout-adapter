@@ -1,8 +1,8 @@
 <?php
 namespace PayoutAdapter\Test\Utils;
 
+use PayoutAdapter\Utils\CurrencyBankInfo;
 use Tests\TestCase;
-use TransferWise\CurrencyBankInfo;
 
 class CurrencyBankInfoTest extends TestCase
 {

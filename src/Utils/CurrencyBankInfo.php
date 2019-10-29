@@ -1389,7 +1389,10 @@ class CurrencyBankInfo
     }
 
     public static function getCountryISO(string $country) {
-        return self::$countryISO[strtolower($country)];
+        if (isset(self::$countryISO[strtolower($country)])) {
+            return strtoupper(self::$countryISO[strtolower($country)]);
+        }
+        return null;
     }
 
     public static function getCurrencyData(string $currency) {
