@@ -97,7 +97,7 @@ abstract class TransPayAbstract
     public function post(string $uri, array $data = [])
     {
         try {
-            return $this->_httpClient->post($uri, ['json' => $data])->getBody()->getContents();
+            return json_decode($this->_httpClient->post($uri, ['json' => $data])->getBody()->getContents(), true);
         } catch (RequestException $e) {
             return $e->getResponse()->getBody()->getContents();
         }
