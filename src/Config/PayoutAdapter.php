@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'default' => 'transferwise',
+    'default' => env('PAYOUT_DRIVER', 'transferwise'),
 
     'transferwise' => [
 
