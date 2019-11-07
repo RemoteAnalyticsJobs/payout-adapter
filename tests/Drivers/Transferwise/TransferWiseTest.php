@@ -5,6 +5,7 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\DB;
 use PayoutAdapter\Drivers\Transferwise\Transferwise;
+use PayoutAdapter\Utils\CurrencyBankInfo;
 use Tests\TestCase;
 
 class TransferWiseTest extends TestCase
@@ -71,6 +72,130 @@ class TransferWiseTest extends TestCase
         $response = (new Transferwise())->createTransaction(100, $data);
         $this->assertNotNull($response['id']);
     }
+
+    public function test_if_transaction_gets_created_for_china() {
+        $user_id = 1;
+        $quote = $this->getQuote('USD', 100, 'china');
+        $values = [
+            'cardNumber' => '6234567890123456',
+            'legalType' => 'PRIVATE'
+        ];
+        $data = [
+            'quote_id' => $quote['id'],
+            'user_id' => $user_id,
+            'customerTransactionId' => $this->faker->uuid,
+            'reference' => 'ABCD job',
+            'phone' => '1234668',
+            'legalType' => 'PRIVATE',
+            'currency' => 'CNY',
+            'sourceCurrency' => 'USD',
+            'countryIsoCode' => 'CHN',
+            'type' => 'chinese_card',
+            'accountHolderName' => 'Sharik Shaiikh',
+            'country' => 'china',
+            'amount' => 100,
+            'bankDetails' => $values
+        ];
+        $response = (new Transferwise())->createTransaction(100, $data);
+        $this->assertNotNull($response['id']);
+    }
+    public function test_if_transaction_gets_created_for_russia() {
+        $user_id = 1;
+        $quote = $this->getQuote('USD', 100, 'russia');
+
+        $values = [
+            "legalType" => "PRIVATE",
+            "bankCode" => "30111",
+            "accountNumber" => "40820810999999999999",
+            "russiaRegion" => "ALTAIKRAI",
+            'address' => [
+                'country' => 'RU',
+                'firstLine' => '123 Main st',
+                'city' => 'something',
+                'state' => 'FL',
+                'postCode' => '72712'
+            ]
+        ];
+        $data = [
+            'quote_id' => $quote['id'],
+            'user_id' => $user_id,
+            'customerTransactionId' => $this->faker->uuid,
+            'reference' => 'ABCD job',
+            'phone' => '1234668',
+            'legalType' => 'PRIVATE',
+            'currency' => 'RUB',
+            'sourceCurrency' => 'USD',
+            'countryIsoCode' => 'RU',
+            'type' => 'russiarapida',
+            'accountHolderName' => 'Шарик Шейх',
+            'country' => 'RU',
+            'amount' => 100,
+            'bankDetails' => $values
+        ];
+
+        $response = (new Transferwise())->createTransaction(100, $data);
+        $this->assertNotNull($response['id']);
+    }
+
+    public function test_if_transaction_gets_created_for_mexico() {
+        $user_id = 1;
+        $quote = $this->getQuote('USD', 100, 'mexico');
+
+        $values = [
+            "legalType" => "PRIVATE",
+            "clabe" => "002010077777777771",
+        ];
+        $data = [
+            'quote_id' => $quote['id'],
+            'user_id' => $user_id,
+            'customerTransactionId' => $this->faker->uuid,
+            'reference' => 'ABCD job',
+            'phone' => '1234668',
+            'legalType' => 'PRIVATE',
+            'currency' => 'MXN',
+            'sourceCurrency' => 'USD',
+            'countryIsoCode' => 'MEX',
+            'type' => 'mexican',
+            'accountHolderName' => 'Sharik Shaiikh',
+            'country' => 'mexico',
+            'amount' => 100,
+            'bankDetails' => $values
+        ];
+
+        $response = (new Transferwise())->createTransaction(100, $data);
+        $this->assertNotNull($response['id']);
+    }
+
+    public function test_if_transaction_gets_created_for_nigeria(){
+        $user_id = 1;
+        $quote = $this->getQuote('USD', 100, 'nigeria');
+        $values = [
+            "legalType" => "PRIVATE",
+            "bankCode" => "076",
+            'accountNumber' => '1234567890'
+        ];
+        $data = [
+            'quote_id' => $quote['id'],
+            'user_id' => $user_id,
+            'customerTransactionId' => $this->faker->uuid,
+            'reference' => 'ABCD job',
+            'phone' => '1234668',
+            'legalType' => 'PRIVATE',
+            'currency' => 'NGN',
+            'sourceCurrency' => 'USD',
+            'countryIsoCode' => 'NG',
+            'type' => 'nigeria',
+            'accountHolderName' => 'Sharik Shaiikh',
+            'country' => 'mexico',
+            'amount' => 100,
+            'bankDetails' => $values
+        ];
+
+        $response = (new Transferwise())->createTransaction(100, $data);
+        $this->assertNotNull($response['id']);
+    }
+
+
 
     public function test_If_userProfileExists_returns_false_When_there_is_no_a_profile()
     {

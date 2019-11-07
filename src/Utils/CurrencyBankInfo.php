@@ -186,7 +186,7 @@ class CurrencyBankInfo
         'qatar' =>	'qa',
         'reunion' =>	're',
         'romania' =>	'ro',
-        'russian federation' =>	'ru',
+        'russian' =>	'ru',
         'rwanda' =>	'rw',
         'saint barthelemy' =>	'bl',
         'saint helena' =>	'sh',

@@ -1,9 +1,10 @@
 <?php namespace PayoutAdapter;
 
 
+use Illuminate\Support\Facades\DB;
 use PayoutAdapter\Contracts\PayoutContract;
-use PayoutAdapter\Drivers\Transferwise\Transferwise;
 use PayoutAdapter\Drivers\TransPay\TransPay;
+use PayoutAdapter\Drivers\Transferwise\Transferwise;
 
 class Payout implements PayoutContract
 {
@@ -52,4 +53,26 @@ class Payout implements PayoutContract
     {
         return config('payout_adapter.default');
     }
+
+    /**
+    * @param array $details
+    * @return bool
+    */
+    public static function storeBankingDetails(array $details)
+    {
+        $user_id        = $details['user_id'];
+        $type           = $details['type'];
+        $bankDetails    = $details['bankDetails'];
+        if (isset($bankDetails['accountNumber'])) {
+            $bankDetails['accountNumber'] = encrypt($bankDetails['accountNumber']);
+        }
+        $isStored = DB::table('payout_adapter_bank_accounts')->insert([
+            'user_id' => $user_id,
+            'type' => $type,
+            'bank_details' => json_encode($bankDetails)
+        ]);
+
+        return $isStored;
+    }
 }
+

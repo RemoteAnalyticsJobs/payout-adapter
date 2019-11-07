@@ -57,7 +57,6 @@ class Transferwise extends TransferwiseAbstract implements DriverContract {
         $profile_id = null;
 
         $data = $this->normalizeData($data);
-
         if (!$this->userProfileExists($data['user_id'])) {
             $profile = $this->createRecipient($data['country'], $data);
             if (isset($profile['errors'])) {
@@ -87,17 +86,17 @@ class Transferwise extends TransferwiseAbstract implements DriverContract {
     }
 
     public function storeProfile(int $profile_id, int $user_id) {
-        return DB::table('payout_adapter_bank_accounts')->insert(['user_id' => $user_id, 'profile_id' => $profile_id]);
+        return DB::table('payout_adapter_gateway_profiles')->insert(['user_id' => $user_id, 'profile_id' => $profile_id]);
     }
 
     public function getRecipientProfileId(int $user_id) {
-        $profile = DB::table('payout_adapter_bank_accounts')->where('user_id', $user_id)->first();
+        $profile = DB::table('payout_adapter_gateway_profiles')->where('user_id', $user_id)->first();
         if (!$profile) return null;
         return $profile->profile_id;
     }
 
     public function userProfileExists(int $user_id) {
-        return DB::table('payout_adapter_bank_accounts')->where('user_id', $user_id)->exists();
+        return DB::table('payout_adapter_gateway_profiles')->where('user_id', $user_id)->exists();
     }
 
     public function normalizeData(array $data){

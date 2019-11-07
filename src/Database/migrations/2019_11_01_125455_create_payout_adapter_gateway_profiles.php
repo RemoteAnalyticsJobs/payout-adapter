@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePayoutAdapterBankAccountTable extends Migration
+class CreatePayoutAdapterGatewayProfiles extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,11 @@ class CreatePayoutAdapterBankAccountTable extends Migration
      */
     public function up()
     {
-        Schema::create('payout_adapter_bank_accounts', function (Blueprint $table) {
+        Schema::create('payout_adapter_gateway_profiles', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->timestamps();
-            $table->string('type');
-            $table->unsignedBigInteger('user_id');
-            $table->json('bank_details');
+            $table->bigInteger('profile_id');
+            $table->bigInteger('user_id');
         });
     }
 
@@ -29,6 +28,6 @@ class CreatePayoutAdapterBankAccountTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('payout_adapter_bank_accounts');
+        Schema::dropIfExists('payout_adapter_gateway_profiles');
     }
 }
