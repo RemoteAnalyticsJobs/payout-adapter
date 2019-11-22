@@ -15,16 +15,21 @@ class TransPay extends TransPayAbstract implements DriverContract
      * @return mixed
      * @throws \Exception
      */
-    public function getQuote(string $sourceCurrency, int $amount, string $recipientCountry)
+    public function getQuote(string $sourceCurrency, int $amount, string $recipientCountry, string $paymentMode = 'C')
     {
-        $quote = [];
         $countryISO = CurrencyBankInfo::getCountryISO($recipientCountry);
-        $currency = CurrencyBankInfo::getCountryCurrency($recipientCountry);
-        $uri = '/api/rates/countryrates?sourcecurrencyisocode='.$sourceCurrency.'&ReceiveCountryIsoCode='.$countryISO;
-        $exchangeRates = $this->normalizeExchangeRates($this->get($uri));
-        $quote['rate'] = $exchangeRates;
-        $quote['targetCurrency'] = $currency;
-        $quote['targetAmount'] = $amount;
+        $currency   = CurrencyBankInfo::getCountryCurrency($recipientCountry);
+
+        $payload = [
+            'ReceiverCountryIsoCode'    => $countryISO,
+            'PaymentModeId'             => $paymentMode,
+            'ReceiveCurrencyIsoCode'    => $currency,
+            'SourceCurrencyIsoCode'     => $sourceCurrency,
+            'SentAmount'                => $amount,
+            'BankId'                    => 'Kotak Mahindra Bank'
+        ];
+
+        $quote = $this->get('api/transaction/transactioninfo?'.http_build_query($payload));
 
         return $quote;
     }
@@ -111,4 +116,13 @@ class TransPay extends TransPayAbstract implements DriverContract
     public function separateFirstAndLastName(string $fullName) {
         return explode(' ', $fullName);
     }
+
+    /**
+     * @param string $countryISOCode
+     * @return array
+     */
+    public function getSupportedBanks(string $countryISOCode) {
+        $uri = 'api/catalogs/banks?CountryISOCode='.$countryISOCode;
+        return $this->get($uri);
+    }    
 }

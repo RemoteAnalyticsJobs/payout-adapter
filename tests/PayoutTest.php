@@ -187,11 +187,10 @@ class PayoutTest extends TestCase
             'type' => 'indian',
             'bankDetails' => [
                 'legalType' => 'PRIVATE',
-                'accountNumber' => '123456789009875'
+                'cardNumber' => '621234567890123'
             ]
         ];
         $stored = Payout::storeBankingDetails($details);
-
         $this->assertTrue($stored);
         $this->assertDatabaseHas('payout_adapter_bank_accounts', [
             'user_id' => $user_id,
@@ -262,7 +261,6 @@ class PayoutTest extends TestCase
             ]
         ];
         $stored = Payout::storeBankingDetails($details);
-
         $this->assertTrue($stored);
         $this->assertDatabaseHas('payout_adapter_bank_accounts', [
             'user_id' => $user_id,

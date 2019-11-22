@@ -17,4 +17,10 @@ interface DriverContract {
      */
     public function createRecipient(string $country, array $data);
 
+    /**
+     * @param string $countryISOCode
+     * @return array
+     */
+    public function getSupportedBanks(string $countryISOCode);
+
 }

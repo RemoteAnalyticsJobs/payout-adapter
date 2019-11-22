@@ -105,12 +105,15 @@ abstract class TransPayAbstract
 
     /**
      * @param string $uri
+     * @param array $payload
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function get(string $uri)
+    public function get(string $uri, array $payload = [])
     {
         try {
-            return json_decode($this->_httpClient->get($uri)->getBody()->getContents(), true);
+            return json_decode($this->_httpClient->get($uri, [
+                'json' => $payload
+            ])->getBody()->getContents(), true);
         } catch (RequestException $e) {
             return json_decode($e->getResponse()->getBody()->getContents(), true);
         }

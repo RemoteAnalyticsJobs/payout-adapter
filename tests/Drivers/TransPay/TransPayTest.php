@@ -20,6 +20,7 @@ class TransPayTest extends TestCase
     public function test_get_quote()
     {
         $quote = $this->driver->getQuote('USD', 100, 'india');
+        dd($quote);
         $this->assertNotNull($quote['rate']);
     }
 
@@ -52,6 +53,13 @@ class TransPayTest extends TestCase
         $name = $this->driver->separateFirstAndLastName($fullName);
         $this->assertEquals('Sharik', $name[0]);
         $this->assertEquals('Shaikh', $name[1]);
+    }
+
+    public function test_getSupportedBanks()
+    {
+        $countryIsoCode = 'IN';
+        $response = $this->driver->getSupportedBanks($countryIsoCode);
+        $this->assertIsInt($response['TotalCount']);
     }
 
 }

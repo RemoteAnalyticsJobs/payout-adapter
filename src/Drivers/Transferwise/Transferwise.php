@@ -105,4 +105,8 @@ class Transferwise extends TransferwiseAbstract implements DriverContract {
         }
         return $data;
     }
+
+    public function getSupportedBanks(string $countryIsoCode) {
+        throw new Exception('Not yet implemented');
+    }
 }
