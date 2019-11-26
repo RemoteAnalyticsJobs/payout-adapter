@@ -17,4 +17,10 @@ class CurrencyBankInfoTest extends TestCase
         $country  = 'india';
         $this->assertNotNull(CurrencyBankInfo::get($country));
     }
+
+    public function test_if_fields_can_be_retrieved_from_country_iso_code()
+    {
+        $sCountryIsoCode = 'IN';
+        $this->assertEquals('indian', CurrencyBankInfo::getCountryIsoData($sCountryIsoCode)['type']);
+    }
 }

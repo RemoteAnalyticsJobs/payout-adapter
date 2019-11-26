@@ -15,18 +15,18 @@ class TransPay extends TransPayAbstract implements DriverContract
      * @return mixed
      * @throws \Exception
      */
-    public function getQuote(string $sourceCurrency, int $amount, string $recipientCountry, string $paymentMode = 'C')
+    public function getQuote(string $sourceCurrency, int $amount, string $recipientCountry, string $bankId = 'IND05', string $paymentMode = 'C')
     {
         $countryISO = CurrencyBankInfo::getCountryISO($recipientCountry);
         $currency   = CurrencyBankInfo::getCountryCurrency($recipientCountry);
 
         $payload = [
             'ReceiverCountryIsoCode'    => $countryISO,
-            'PaymentModeId'             => $paymentMode,
             'ReceiveCurrencyIsoCode'    => $currency,
             'SourceCurrencyIsoCode'     => $sourceCurrency,
+            'PaymentModeId'             => $paymentMode,
             'SentAmount'                => $amount,
-            'BankId'                    => 'Kotak Mahindra Bank'
+            'BankId'                    => $bankId
         ];
 
         $quote = $this->get('api/transaction/transactioninfo?'.http_build_query($payload));

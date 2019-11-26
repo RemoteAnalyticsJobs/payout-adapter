@@ -57,8 +57,9 @@ class TransPayTest extends TestCase
 
     public function test_getSupportedBanks()
     {
-        $countryIsoCode = 'IN';
+        $countryIsoCode = 'NG';
         $response = $this->driver->getSupportedBanks($countryIsoCode);
+        dd($response);
         $this->assertIsInt($response['TotalCount']);
     }
 
