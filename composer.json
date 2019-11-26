@@ -16,7 +16,9 @@
         }
     },
     "minimum-stability": "dev",
-    "require": {},
+    "require": {
+        "sharik709/laravel-payout-adapter": "dev-master"
+    },
     "extra" : {
         "laravel" : {
             "providers" : [

@@ -74,5 +74,14 @@ class Payout implements PayoutContract
 
         return $isStored;
     }
+
+    public static function  getBankingDetails(int $user_id)
+    {
+        $details = DB::table('payout_adapter_bank_accounts')->where('user_id', $user_id)->first();
+        $details->bankDetails = json_decode($details->bank_details, true);
+        $details->bankDetails['accountNumber'] = decrypt($details->bankDetails['accountNumber']);
+        unset($details->bank_details);
+        return (array)$details;
+    }
 }
 

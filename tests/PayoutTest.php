@@ -268,6 +268,28 @@ class PayoutTest extends TestCase
         ]);
     }
 
+
+    public function test_if_banking_Details_Can_be_retrieved_for_a_user(){
+        $user_id = 1;
+        $details = [
+            'user_id' => $user_id,
+            'type' => 'russian',
+            'bankDetails' => [
+                'legalType' => 'PRIVATE',
+                'accountNumber' => '1234567890',
+                'bankCode' => '12346',
+                'address' => [
+                    'country' => 'US',
+                    'state' => 'FL',
+                    'city' => 'miami',
+                    'firstLane' => '123 Main St.'
+                ]
+            ]
+        ];
+        $stored = Payout::storeBankingDetails($details);
+        $response = Payout::getBankingDetails($user_id);
+        $this->assertEquals($details['bankDetails'], $response['bankDetails']);
+    }
 }
 
 
