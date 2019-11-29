@@ -5,10 +5,10 @@ interface DriverContract {
     /**
      * @param string $sourceCurrency
      * @param int $amount
-     * @param string $recipientCountry
+     * @param string $recipientCountryIso
      * @return mixed
      */
-    public function getQuote(string $sourceCurrency, int $amount, string $recipientCountry);
+    public function getQuote(string $sourceCurrency, int $amount, string $recipientCountryIso);
 
     /**
      * @param string $country

@@ -8,14 +8,14 @@ use Ramsey\Uuid\Uuid;
 class Transferwise extends TransferwiseAbstract implements DriverContract {
 
     /**
-     * @param $sourceCurrency
-     * @param $amount
-     * @param $recipientCountry
+     * @param string $sourceCurrency
+     * @param int $amount
+     * @param string $recipientCountryIso
      * @return mixed
      */
-    public function getQuote(string $sourceCurrency, int $amount, string $recipientCountry)
+    public function getQuote(string $sourceCurrency, int $amount, string $recipientCountryIso)
     {
-        $recipientCurrency = CurrencyBankInfo::getCountryCurrency($recipientCountry);
+        $recipientCurrency = CurrencyBankInfo::getCountryISOCurrency($recipientCountryIso);
         return $this->post('quotes', [
             'profile' => $this->getProfileId(),
             'source' => $sourceCurrency,

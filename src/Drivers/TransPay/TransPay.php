@@ -11,17 +11,17 @@ class TransPay extends TransPayAbstract implements DriverContract
     /**
      * @param string $sourceCurrency
      * @param int $amount
-     * @param string $recipientCountry
+     * @param string $recipientCountryIso
+     * @param string $bankId
+     * @param string $paymentMode
      * @return mixed
-     * @throws \Exception
      */
-    public function getQuote(string $sourceCurrency, int $amount, string $recipientCountry, string $bankId = 'IND05', string $paymentMode = 'C')
+    public function getQuote(string $sourceCurrency, int $amount, string $recipientCountryIso, string $bankId = 'IND05', string $paymentMode = 'C')
     {
-        $countryISO = CurrencyBankInfo::getCountryISO($recipientCountry);
-        $currency   = CurrencyBankInfo::getCountryCurrency($recipientCountry);
+        $currency   = CurrencyBankInfo::getCountryISOCurrency($recipientCountryIso);
 
         $payload = [
-            'ReceiverCountryIsoCode'    => $countryISO,
+            'ReceiverCountryIsoCode'    => $recipientCountryIso,
             'ReceiveCurrencyIsoCode'    => $currency,
             'SourceCurrencyIsoCode'     => $sourceCurrency,
             'PaymentModeId'             => $paymentMode,
@@ -124,5 +124,5 @@ class TransPay extends TransPayAbstract implements DriverContract
     public function getSupportedBanks(string $countryISOCode) {
         $uri = 'api/catalogs/banks?CountryISOCode='.$countryISOCode;
         return $this->get($uri);
-    }    
+    }
 }
