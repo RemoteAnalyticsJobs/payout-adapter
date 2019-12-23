@@ -21,7 +21,7 @@ class TransferWiseTest extends TestCase
     public function test_if_quote_for_an_amount_can_be_received()
     {
         $driver = new Transferwise;
-        $quote = $driver->getQuote('USD', 100, 'chile');
+        $quote = $driver->getQuote('USD', 100, 'IN');
         $this->assertNotNull($quote['id']);
     }
 

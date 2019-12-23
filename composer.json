@@ -17,7 +17,8 @@
     },
     "minimum-stability": "dev",
     "require": {
-        "sharik709/laravel-payout-adapter": "dev-master"
+        "sharik709/laravel-payout-adapter": "dev-master",
+        "guzzlehttp/guzzle": "^6.5"
     },
     "extra" : {
         "laravel" : {

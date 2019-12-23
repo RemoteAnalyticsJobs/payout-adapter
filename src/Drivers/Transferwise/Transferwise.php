@@ -16,7 +16,7 @@ class Transferwise extends TransferwiseAbstract implements DriverContract {
     public function getQuote(string $sourceCurrency, int $amount, string $recipientCountryIso)
     {
         $recipientCurrency = CurrencyBankInfo::getCountryISOCurrency($recipientCountryIso);
-        return $this->post('quotes', [
+        $quote = $this->post('quotes', [
             'profile' => $this->getProfileId(),
             'source' => $sourceCurrency,
             'target' => $recipientCurrency,
@@ -24,6 +24,21 @@ class Transferwise extends TransferwiseAbstract implements DriverContract {
             'targetAmount' => $amount,
             'type' => 'BALANCE_PAYOUT'
         ]);
+        return $this->normalizeQuote($quote);
+    }
+
+    protected function normalizeQuote(array $quote) {
+        $newQuote = [];
+        $newQuote['id']                 = $quote['id'];
+        $newQuote['deliveryEstimate']   = $quote['deliveryEstimate'];
+        $newQuote['receiverCurrency']   = $quote['target'];
+        $newQuote['expectedAmount']     = $quote['rate'] * $quote['targetAmount'];
+        $newQuote['sendingAmount']      = $quote['targetAmount'];
+        $newQuote['total']              = $quote['targetAmount'] + $quote['fee'];
+        $newQuote['rate']               = $quote['rate'];
+        $newQuote['fee']                = $quote['fee'];
+
+        return $newQuote;
     }
 
     /**

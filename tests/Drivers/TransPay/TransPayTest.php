@@ -19,8 +19,7 @@ class TransPayTest extends TestCase
 
     public function test_get_quote()
     {
-        $quote = $this->driver->getQuote('USD', 100, 'india');
-        dd($quote);
+        $quote = $this->driver->getQuote('USD', 100, 'IN');
         $this->assertNotNull($quote['rate']);
     }
 

@@ -31,7 +31,20 @@ class TransPay extends TransPayAbstract implements DriverContract
 
         $quote = $this->get('api/transaction/transactioninfo?'.http_build_query($payload));
 
-        return $quote;
+        return $this->normalizeQuote($quote, $currency);
+    }
+
+    protected function normalizeQuote($quote, $currency) {
+        $newQuote['id']                 = null;
+        $newQuote['deliveryEstimate']   = 'unavailable';
+        $newQuote['receiverCurrency']   = $currency;
+        $newQuote['expectedAmount']     = $quote['Payout'];
+        $newQuote['sendingAmount']      = $quote['SentAmount'];
+        $newQuote['total']              = $quote['CashAmount'];
+        $newQuote['rate']               = $quote['TransactionRate'];
+        $newQuote['fee']                = $quote['ServiceFee'];
+
+        return $newQuote;
     }
 
     /**
@@ -111,6 +124,7 @@ class TransPay extends TransPayAbstract implements DriverContract
         if (isset($details['abartn'])) {
             return $details['abartn'];
         }
+
     }
 
     public function separateFirstAndLastName(string $fullName) {
