@@ -78,6 +78,9 @@ class Payout implements PayoutContract
     public static function  getBankingDetails(int $user_id)
     {
         $details = DB::table('payout_adapter_bank_accounts')->where('user_id', $user_id)->first();
+        if (!$details) {
+            return [];
+        }
         $details->bankDetails = json_decode($details->bank_details, true);
         $details->bankDetails['accountNumber'] = decrypt($details->bankDetails['accountNumber']);
         unset($details->bank_details);
