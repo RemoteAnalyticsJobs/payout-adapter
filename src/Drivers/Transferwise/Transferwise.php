@@ -1,6 +1,7 @@
 <?php namespace PayoutAdapter\Drivers\Transferwise;
 
 use Illuminate\Support\Facades\DB;
+use PayoutAdapter\Payout;
 use PayoutAdapter\Utils\CurrencyBankInfo;
 use PayoutAdapter\Contracts\DriverContract;
 use Ramsey\Uuid\Uuid;
@@ -24,6 +25,9 @@ class Transferwise extends TransferwiseAbstract implements DriverContract {
             'targetAmount' => $amount,
             'type' => 'BALANCE_PAYOUT'
         ]);
+        if (!isset($quote['id'])) {
+            return $quote;
+        }
         return $this->normalizeQuote($quote);
     }
 
@@ -122,6 +126,6 @@ class Transferwise extends TransferwiseAbstract implements DriverContract {
     }
 
     public function getSupportedBanks(string $countryIsoCode) {
-        throw new Exception('Not yet implemented');
+        return [];
     }
 }

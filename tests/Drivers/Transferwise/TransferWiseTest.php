@@ -47,7 +47,7 @@ class TransferWiseTest extends TestCase
 
     public function test_if_transaction_gets_created() {
         $user_id = 1;
-        $quote = $this->getQuote('USD', 100, 'india');
+        $quote = $this->getQuote('USD', 100, 'IN');
         $values = [
             'ifscCode' => 'KKBK0000628',
             'accountNumber' => '1234567890',
